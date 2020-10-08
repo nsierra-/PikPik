@@ -1,5 +1,10 @@
 #include "PikWindow.h"
-#include <iostream>
+#include <QDebug>
+
+PikWindow::PikWindow()
+{
+	setAttribute(Qt::WA_AcceptTouchEvents);
+}
 
 bool PikWindow::event(QEvent *event)
 {
@@ -8,13 +13,24 @@ bool PikWindow::event(QEvent *event)
 		case QEvent::TouchBegin:
 		case QEvent::TouchUpdate:
 		case QEvent::TouchEnd:
-		{
-			break ;
-		}
+			return touchEvent(static_cast<QTouchEvent *>(event));
+
 		default:
 			break ;
 	}
-	(void)event;
-	std::cout << "Wesh" << std::endl;
+
+	return true;
+}
+
+bool PikWindow::touchEvent(QTouchEvent *event)
+{
+	qDebug() << "Touch Event";
+
+	QList<QTouchEvent::TouchPoint> touchPoints = event->touchPoints();
+
+	for (QTouchEvent::TouchPoint touchPoint : touchPoints)
+		qDebug() << "\tPoint " << touchPoint.id() << touchPoint.pos();
+
+	qDebug() << "\n";
 	return true;
 }
